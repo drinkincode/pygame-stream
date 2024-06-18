@@ -24,7 +24,7 @@ ORANGE = (255, 128, 0)
 PURPLE = (255, 0, 255)
 CYAN = ( 0, 255, 255)
 
-BGCOLOR = GREEN
+BGCOLOR = NAVYBLUE
 LIGHTBGCOLOR = GRAY
 BOXCOLOR = CYAN
 HIGHLIGHTCOLOR = BLUE
@@ -51,32 +51,7 @@ def main():
     
     
     boardHandler = BoardHandler(BOARDWIDTH, BOARDHEIGHT)
-    updatesList = []
-    
-    # create new player
-    name = 'john'
-    statsList = [
-        ['healthStats', 100],
-        ['stamina', 100]
-    ]
-    attackList = [
-        {
-            'atkName': 'punch',
-            'atkDamage': 10,
-            'atkLevel': 1,
-            'atkCost': []
-        }
-    ]
-    xPos = 8
-    yPos = 9
-    
-    player = Actor(name, statsList, attackList)
-    player.color = RED
-   
-    updatesList.append([player, xPos, yPos])
-    boardHandler.updateBoard(updatesList)
-    drawBoard(boardHandler.board)
-    
+    player = startGame(boardHandler)
     while True: # main game loop
         mouseClicked = False
         # direction sprite is facing
@@ -139,9 +114,64 @@ def drawBoard(board):
                 currBoxColor = board[boxX][boxY].color
             left, top = leftTopCoordsOfBox(boxX, boxY)
             pygame.draw.rect(DISPLAYSURF, currBoxColor, (left, top, BOXSIZE, BOXSIZE))
-
-def startGame():
-    return True
+            
+def startGame(boardHandler: BoardHandler):
+    updatesList = []
+    
+    # create new player dict
+    initActorsList = [
+        {
+            'name': 'john', 
+            'statsList': [
+                ['healthStats', 100],
+                ['stamina', 100]
+            ],
+            'attackList': [
+                {
+                    'atkName': 'punch',
+                    'atkDamage': 10,
+                    'atkLevel': 1,
+                    'atkCost': []
+                }
+            ],
+            'xPos': 8,
+            'yPos': 9,
+            'color': GREEN
+        },
+        
+        {
+            'name': 'npc', 
+            'statsList': [
+                ['healthStats', 100],
+                ['stamina', 100]
+            ],
+            'attackList': [
+                {
+                    'atkName': 'punch',
+                    'atkDamage': 10,
+                    'atkLevel': 1,
+                    'atkCost': []
+                }
+            ],
+            'xPos': 0,
+            'yPos': 0,
+            'color': RED
+        }
+    ]
+    
+    for actor in initActorsList:
+        newActor = Actor(actor['name'], actor['statsList'], actor['attackList'], actor['xPos'], actor['yPos'])
+        newActor.color = actor['color']
+        
+        updatesList.append([newActor, newActor.x, newActor.y])
+   
+    boardHandler.updateBoard(updatesList)
+    drawBoard(boardHandler.board)
+    pygame.display.update()
+    
+    player = updatesList[0][0]
+    return player
+    
 
 
 if __name__ == '__main__':
