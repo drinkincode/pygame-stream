@@ -49,7 +49,6 @@ def main():
     
     while True: # main game loop
         mouseClicked = False
-        
         for event in pygame.event.get(): # event handling loop
             if event.type == QUIT or (event.type == KEYUP and event.key == K_ESCAPE):
                 pygame.quit()
