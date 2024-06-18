@@ -140,6 +140,8 @@ def drawBoard(board):
             left, top = leftTopCoordsOfBox(boxX, boxY)
             pygame.draw.rect(DISPLAYSURF, currBoxColor, (left, top, BOXSIZE, BOXSIZE))
 
+def startGame():
+    return True
 
 
 if __name__ == '__main__':
