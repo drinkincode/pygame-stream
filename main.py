@@ -49,14 +49,13 @@ def main():
     
     DISPLAYSURF.fill(BGCOLOR)
     
-    
     boardHandler = BoardHandler(BOARDWIDTH, BOARDHEIGHT)
     player = startGame(boardHandler)
     while True: # main game loop
         mouseClicked = False
         # direction sprite is facing
         direction = RIGHT
-        updatesList = []
+        updatesList = npcActorUpdates(boardHandler)
         for event in pygame.event.get(): # event handling loop
             currXYList = boardHandler.actorPosDict[player.name]
             newX = currXYList[0]
@@ -90,14 +89,12 @@ def main():
                     if newY < BOARDHEIGHT - 1:
                         newY += 1
                     else: 
-                        newY = 0
-                    
-                    
+                        newY = 0       
+                          
             updatesList.append([player, newX, newY])
             boardHandler.updateBoard(updatesList)
             drawBoard(boardHandler.board)
         
-        # drawBoard(boardHandler.board)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
@@ -114,7 +111,21 @@ def drawBoard(board):
                 currBoxColor = board[boxX][boxY].color
             left, top = leftTopCoordsOfBox(boxX, boxY)
             pygame.draw.rect(DISPLAYSURF, currBoxColor, (left, top, BOXSIZE, BOXSIZE))
-            
+ 
+def npcActorUpdates(boardHandler: BoardHandler):
+    updatesList = []
+    for key in boardHandler.actorPosDict:
+        actorPosList = boardHandler.actorPosDict[key]
+        
+        x = actorPosList[0]
+        y = actorPosList[1]
+        
+        actor = boardHandler.board[x][y]
+        if 'npc' in actor.name:
+            updatesList.append([actor, (actor.x - 1), actor.y])
+    
+    return updatesList
+           
 def startGame(boardHandler: BoardHandler):
     updatesList = []
     
@@ -172,6 +183,7 @@ def startGame(boardHandler: BoardHandler):
     player = updatesList[0][0]
     return player
     
+
 
 
 if __name__ == '__main__':
