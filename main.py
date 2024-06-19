@@ -24,7 +24,7 @@ ORANGE = (255, 128, 0)
 PURPLE = (255, 0, 255)
 CYAN = ( 0, 255, 255)
 
-BGCOLOR = GREEN
+BGCOLOR = NAVYBLUE
 LIGHTBGCOLOR = GRAY
 BOXCOLOR = CYAN
 HIGHLIGHTCOLOR = BLUE
@@ -49,39 +49,13 @@ def main():
     
     DISPLAYSURF.fill(BGCOLOR)
     
-    
     boardHandler = BoardHandler(BOARDWIDTH, BOARDHEIGHT)
-    updatesList = []
-    
-    # create new player
-    name = 'john'
-    statsList = [
-        ['healthStats', 100],
-        ['stamina', 100]
-    ]
-    attackList = [
-        {
-            'atkName': 'punch',
-            'atkDamage': 10,
-            'atkLevel': 1,
-            'atkCost': []
-        }
-    ]
-    xPos = 8
-    yPos = 9
-    
-    player = Actor(name, statsList, attackList)
-    player.color = RED
-   
-    updatesList.append([player, xPos, yPos])
-    boardHandler.updateBoard(updatesList)
-    drawBoard(boardHandler.board)
-    
+    player = startGame(boardHandler)
     while True: # main game loop
         mouseClicked = False
         # direction sprite is facing
         direction = RIGHT
-        updatesList = []
+        updatesList = npcActorUpdates(boardHandler)
         for event in pygame.event.get(): # event handling loop
             currXYList = boardHandler.actorPosDict[player.name]
             newX = currXYList[0]
@@ -115,14 +89,12 @@ def main():
                     if newY < BOARDHEIGHT - 1:
                         newY += 1
                     else: 
-                        newY = 0
-                    
-                    
+                        newY = 0       
+                          
             updatesList.append([player, newX, newY])
             boardHandler.updateBoard(updatesList)
             drawBoard(boardHandler.board)
         
-        # drawBoard(boardHandler.board)
         pygame.display.update()
         FPSCLOCK.tick(FPS)
 
@@ -139,6 +111,78 @@ def drawBoard(board):
                 currBoxColor = board[boxX][boxY].color
             left, top = leftTopCoordsOfBox(boxX, boxY)
             pygame.draw.rect(DISPLAYSURF, currBoxColor, (left, top, BOXSIZE, BOXSIZE))
+ 
+def npcActorUpdates(boardHandler: BoardHandler):
+    updatesList = []
+    for key in boardHandler.actorPosDict:
+        actorPosList = boardHandler.actorPosDict[key]
+        
+        x = actorPosList[0]
+        y = actorPosList[1]
+        
+        actor = boardHandler.board[x][y]
+        if 'npc' in actor.name:
+            updatesList.append([actor, (actor.x - 1), actor.y])
+    
+    return updatesList
+           
+def startGame(boardHandler: BoardHandler):
+    updatesList = []
+    
+    # create new player dict
+    initActorsList = [
+        {
+            'name': 'john', 
+            'statsList': [
+                ['healthStats', 100],
+                ['stamina', 100]
+            ],
+            'attackList': [
+                {
+                    'atkName': 'punch',
+                    'atkDamage': 10,
+                    'atkLevel': 1,
+                    'atkCost': []
+                }
+            ],
+            'xPos': 8,
+            'yPos': 9,
+            'color': GREEN
+        },
+        
+        {
+            'name': 'npc', 
+            'statsList': [
+                ['healthStats', 100],
+                ['stamina', 100]
+            ],
+            'attackList': [
+                {
+                    'atkName': 'punch',
+                    'atkDamage': 10,
+                    'atkLevel': 1,
+                    'atkCost': []
+                }
+            ],
+            'xPos': 0,
+            'yPos': 0,
+            'color': RED
+        }
+    ]
+    
+    for actor in initActorsList:
+        newActor = Actor(actor['name'], actor['statsList'], actor['attackList'], actor['xPos'], actor['yPos'])
+        newActor.color = actor['color']
+        
+        updatesList.append([newActor, newActor.x, newActor.y])
+   
+    boardHandler.updateBoard(updatesList)
+    drawBoard(boardHandler.board)
+    pygame.display.update()
+    
+    player = updatesList[0][0]
+    return player
+    
 
 
 

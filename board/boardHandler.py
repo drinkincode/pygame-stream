@@ -28,7 +28,7 @@ class BoardHandler():
                 
             self.board[x][y] = actor
             self.actorPosDict[actor.name] = [x, y]
-            return True
+        return True
             
     def doesActorExist(self, actor: Actor):
         res = False
