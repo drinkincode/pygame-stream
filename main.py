@@ -53,9 +53,11 @@ def main():
     player = startGame(boardHandler)
     while True: # main game loop
         mouseClicked = False
+
         # direction sprite is facing
         direction = RIGHT
         updatesList = npcActorUpdates(boardHandler)
+
         for event in pygame.event.get(): # event handling loop
             currXYList = boardHandler.actorPosDict[player.name]
             newX = currXYList[0]
