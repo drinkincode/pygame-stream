@@ -96,9 +96,9 @@ def main():
                     else: 
                         newY = 0
                         
-            updatesList.append([player, newX, newY])
-            boardHandler.updateBoard(updatesList)
-            drawBoard(boardHandler.board)
+        updatesList.append([player, newX, newY])
+        boardHandler.updateBoard(updatesList)
+        drawBoard(boardHandler.board)
         
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -130,10 +130,9 @@ def npcActorUpdates(boardHandler: BoardHandler, npc_num_moves):
         
         if (pygame.time.get_ticks() / NPC_TIME_TO_MOVE) > npc_num_moves:
             if 'npc' in actor.name:
-                updatesList.append([actor, (actor.x - 1), actor.y])
+                actor.x += 1
+                updatesList.append([actor, actor.x, actor.y])
                 npc_num_moves += 1
-                
-    print(npc_num_moves)
     return updatesList, npc_num_moves
            
 def startGame(boardHandler: BoardHandler):
