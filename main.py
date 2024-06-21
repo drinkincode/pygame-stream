@@ -120,23 +120,6 @@ def drawBoard(board):
             left, top = leftTopCoordsOfBox(boxX, boxY)
             pygame.draw.rect(DISPLAYSURF, currBoxColor, (left, top, BOXSIZE, BOXSIZE))
 
-def npcActorUpdates(boardHandler: BoardHandler, npc_num_moves):
-    updatesList = []
-    for key in boardHandler.actorPosDict.keys():
-        actorPosList = boardHandler.actorPosDict[key]
-        
-        x = actorPosList[0]
-        y = actorPosList[1]
-        
-        actor = boardHandler.board[x][y]
-        
-        if (pygame.time.get_ticks() / NPC_TIME_TO_MOVE) > npc_num_moves:
-            if 'npc' in actor.name:
-                actor.x += 1
-                updatesList.append([actor, actor.x, actor.y])
-                npc_num_moves += 1
-    return updatesList, npc_num_moves
-
 def startNcpHandler():
     npcPath = []
     
