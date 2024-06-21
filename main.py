@@ -89,7 +89,6 @@ def main():
                 elif (event.key == K_UP or event.key == K_a):
                     currXYList = boardHandler.actorPosDict[player.name]
                     newY -= 1
-                
                 # down
                 elif (event.key == K_DOWN or event.key == K_a):
                     currXYList = boardHandler.actorPosDict[player.name]
