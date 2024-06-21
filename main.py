@@ -2,7 +2,8 @@ import random, pygame, sys, os
 from pygame.locals import *
 from actors.actor import Actor
 from board.boardHandler import BoardHandler
-
+from actors.npcHandler import NpcHandler
+ 
 FPS = 30
 WINDOWWIDTH = 2000
 WINDOWHEIGHT = 1200
@@ -31,12 +32,16 @@ HIGHLIGHTCOLOR = BLUE
 
 ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
 
+NPC_TIME_TO_MOVE = 1000
 
 def main():
+    npc_num_moves = 1
     global FPSCLOCK, DISPLAYSURF
     pygame.init()
+    
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
+    
     pygame.display.set_caption('Game Window')
     
     mousex = 0 # used to store x coordinate of mouse event
@@ -49,14 +54,16 @@ def main():
     
     DISPLAYSURF.fill(BGCOLOR)
     
+    
     boardHandler = BoardHandler(BOARDWIDTH, BOARDHEIGHT)
-    player = startGame(boardHandler)
+    player, NpcHandler = startGame(boardHandler)
     while True: # main game loop
         mouseClicked = False
 
         # direction sprite is facing
         direction = RIGHT
-        updatesList = npcActorUpdates(boardHandler)
+        updatesList = []
+        updatesList = NpcHandler.getNpcUpdates(pygame.time.get_ticks(), updatesList)
 
         for event in pygame.event.get(): # event handling loop
             currXYList = boardHandler.actorPosDict[player.name]
@@ -75,7 +82,6 @@ def main():
                 # right
                 elif (event.key == K_RIGHT or event.key == K_a):
                     currXYList = boardHandler.actorPosDict[player.name]
- 
                     if newX < BOARDWIDTH - 1:
                         newX += 1
                     else: 
@@ -91,11 +97,11 @@ def main():
                     if newY < BOARDHEIGHT - 1:
                         newY += 1
                     else: 
-                        newY = 0       
-                          
-            updatesList.append([player, newX, newY])
-            boardHandler.updateBoard(updatesList)
-            drawBoard(boardHandler.board)
+                        newY = 0
+                        
+                updatesList.append([player, newX, newY])
+        boardHandler.updateBoard(updatesList)
+        drawBoard(boardHandler.board)
         
         pygame.display.update()
         FPSCLOCK.tick(FPS)
@@ -113,24 +119,104 @@ def drawBoard(board):
                 currBoxColor = board[boxX][boxY].color
             left, top = leftTopCoordsOfBox(boxX, boxY)
             pygame.draw.rect(DISPLAYSURF, currBoxColor, (left, top, BOXSIZE, BOXSIZE))
- 
-def npcActorUpdates(boardHandler: BoardHandler):
+
+def npcActorUpdates(boardHandler: BoardHandler, npc_num_moves):
     updatesList = []
-    for key in boardHandler.actorPosDict:
+    for key in boardHandler.actorPosDict.keys():
         actorPosList = boardHandler.actorPosDict[key]
         
         x = actorPosList[0]
         y = actorPosList[1]
         
         actor = boardHandler.board[x][y]
-        if 'npc' in actor.name:
-            updatesList.append([actor, (actor.x - 1), actor.y])
+        
+        if (pygame.time.get_ticks() / NPC_TIME_TO_MOVE) > npc_num_moves:
+            if 'npc' in actor.name:
+                actor.x += 1
+                updatesList.append([actor, actor.x, actor.y])
+                npc_num_moves += 1
+    return updatesList, npc_num_moves
+
+def startNcpHandler():
+    npcPath = []
     
-    return updatesList
+    moveX = 1
+    moveY = 1
+    moveTime = 1000
+    move = [[moveX, moveY], moveTime]
+    npcPath.append(move)
+    
+    npcNumMoves = 4
+    for i in range(npcNumMoves):
+        moveX += 1
+        move = [[moveX, moveY], moveTime]
+        npcPath.append(move)
+    
+    npcPath2 = []
+    moveY += 1
+    moveTime += 500
+    move = [[moveX, moveY], moveTime]
+    npcPath2.append(move)
+    for i in range(npcNumMoves):
+        moveX += 1
+        move = [[moveX, moveY], moveTime]
+        npcPath2.append(move)
+        
+    print('npc1 path: ' + str(npcPath))
+    print('npc2 path: ' + str(npcPath2))
+    
+    npcList = [
+        
+        {
+            'actor': {
+                'name': 'npc', 
+                'statsList': [
+                    ['healthStats', 100],
+                    ['stamina', 100]
+                ],
+                'attackList': [
+                    {
+                        'atkName': 'punch',
+                        'atkDamage': 10,
+                        'atkLevel': 1,
+                        'atkCost': []
+                    }
+                ],
+                'x': 1,
+                'y': 1,
+                'color': RED
+            },
+            'path': npcPath,
+        },
+        {
+            'actor': {
+                'name': 'npc2', 
+                'statsList': [
+                    ['healthStats', 100],
+                    ['stamina', 100]
+                ],
+                'attackList': [
+                    {
+                        'atkName': 'punch',
+                        'atkDamage': 10,
+                        'atkLevel': 1,
+                        'atkCost': []
+                    }
+                ],
+                'x': 1,
+                'y': 2,
+                'color': RED
+            },
+            'path': npcPath2,
+        }
+    ]
+    npcHandler = NpcHandler()
+    npcHandler.createBulkNpcs(npcList)
+    return npcHandler
            
 def startGame(boardHandler: BoardHandler):
     updatesList = []
-    
+    npcHandler = startNcpHandler()
     # create new player dict
     initActorsList = [
         {
@@ -152,41 +238,41 @@ def startGame(boardHandler: BoardHandler):
             'color': GREEN
         },
         
-        {
-            'name': 'npc', 
-            'statsList': [
-                ['healthStats', 100],
-                ['stamina', 100]
-            ],
-            'attackList': [
-                {
-                    'atkName': 'punch',
-                    'atkDamage': 10,
-                    'atkLevel': 1,
-                    'atkCost': []
-                }
-            ],
-            'xPos': 0,
-            'yPos': 0,
-            'color': RED
-        }
+        # {
+        #     'name': 'npc', 
+        #     'statsList': [
+        #         ['healthStats', 100],
+        #         ['stamina', 100]
+        #     ],
+        #     'attackList': [
+        #         {
+        #             'atkName': 'punch',
+        #             'atkDamage': 10,
+        #             'atkLevel': 1,
+        #             'atkCost': []
+        #         }
+        #     ],
+        #     'xPos': 0,
+        #     'yPos': 0,
+        #     'color': RED
+        # }
     ]
-    
+
     for actor in initActorsList:
         newActor = Actor(actor['name'], actor['statsList'], actor['attackList'], actor['xPos'], actor['yPos'])
         newActor.color = actor['color']
         
         updatesList.append([newActor, newActor.x, newActor.y])
-   
+    
+    updatesList = npcHandler.getNpcUpdates(pygame.time.get_ticks(), updatesList)
+    
     boardHandler.updateBoard(updatesList)
     drawBoard(boardHandler.board)
     pygame.display.update()
     
     player = updatesList[0][0]
-    return player
+    return player, npcHandler
     
-
-
 
 if __name__ == '__main__':
     main()
