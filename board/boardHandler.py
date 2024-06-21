@@ -6,9 +6,12 @@ class BoardHandler():
         #    'actorName': [x, y]
         # }
         self.actorPosDict = {}
+        self.boardWidth = boardWidth
+        self.boardHeight = boardHeight
         
     def createBoard(self, boardWidth, boardHeight):
         board = [ [0] * boardHeight for _ in range(boardWidth) ]
+        print(board)
         return board
     
     # updatesList: [actor, x, y]
@@ -27,6 +30,8 @@ class BoardHandler():
                 
             self.board[x][y] = actor
             self.actorPosDict[actor.name] = [x, y]
+            
+        # pass to collison detection
         return True
             
     def doesActorExist(self, actor):
