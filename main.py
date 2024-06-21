@@ -196,7 +196,7 @@ def startGame(boardHandler: BoardHandler):
     x = playerActorsDict['xPos']
     y = playerActorsDict['yPos']
     y = playerActorsDict['yPos']
-    playerDir = UP
+    playerDir = K_UP
     
     newActor = PlayerActor(playerDir, playerName, playerStatsList, playerAttackList, x, y)
     

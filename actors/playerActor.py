@@ -4,9 +4,10 @@ class PlayerActor(Actor):
         super().__init__(playerName, playerStatsList, playerAttackList, x, y)
         self.direction = initDir
         
-    def isMove(self, direction)->bool:
+    def isDirection(self, direction)->bool:
         if self.direction == direction:
             return True
+        self.direction = direction
         return False
     
     
