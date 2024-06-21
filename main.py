@@ -5,9 +5,9 @@ from board.boardHandler import BoardHandler
 from actors.npcHandler import NpcHandler
  
 FPS = 30
-WINDOWWIDTH = 2000
-WINDOWHEIGHT = 1200
-BOXSIZE = 100
+WINDOWWIDTH = 1000
+WINDOWHEIGHT = 600
+BOXSIZE = 50
 BOARDWIDTH = 16
 BOARDHEIGHT = 10
 
@@ -32,7 +32,6 @@ HIGHLIGHTCOLOR = BLUE
 
 ALLCOLORS = (RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN)
 
-NPC_TIME_TO_MOVE = 1000
 
 def main():
     npc_num_moves = 1
@@ -90,7 +89,6 @@ def main():
                 elif (event.key == K_UP or event.key == K_a):
                     currXYList = boardHandler.actorPosDict[player.name]
                     newY -= 1
-                
                 # down
                 elif (event.key == K_DOWN or event.key == K_a):
                     currXYList = boardHandler.actorPosDict[player.name]
@@ -255,7 +253,7 @@ def startGame(boardHandler: BoardHandler):
     
     player = updatesList[0][0]
     return player, npcHandler
-    
+
 
 if __name__ == '__main__':
     main()
