@@ -62,7 +62,7 @@ def main():
         # direction sprite is facing
         direction = RIGHT
         updatesList = []
-        updatesList = NpcHandler.getNpcUpdates(pygame.time.get_ticks() , updatesList)
+        updatesList = NpcHandler.getNpcUpdates(pygame.time.get_ticks(), updatesList)
         for event in pygame.event.get(): # event handling loop
             currXYList = boardHandler.actorPosDict[player.name]
             newX = currXYList[0]
@@ -97,7 +97,7 @@ def main():
                     else: 
                         newY = 0
                         
-        updatesList.append([player, newX, newY])
+                updatesList.append([player, newX, newY])
         boardHandler.updateBoard(updatesList)
         drawBoard(boardHandler.board)
         
@@ -136,7 +136,35 @@ def npcActorUpdates(boardHandler: BoardHandler, npc_num_moves):
     return updatesList, npc_num_moves
 
 def startNcpHandler():
+    npcPath = []
+    
+    moveX = 1
+    moveY = 1
+    moveTime = 1000
+    move = [[moveX, moveY], moveTime]
+    npcPath.append(move)
+    
+    npcNumMoves = 4
+    for i in range(npcNumMoves):
+        moveX += 1
+        move = [[moveX, moveY], moveTime]
+        npcPath.append(move)
+    
+    npcPath2 = []
+    moveY += 1
+    moveTime += 500
+    move = [[moveX, moveY], moveTime]
+    npcPath2.append(move)
+    for i in range(npcNumMoves):
+        moveX += 1
+        move = [[moveX, moveY], moveTime]
+        npcPath2.append(move)
+        
+    print('npc1 path: ' + str(npcPath))
+    print('npc2 path: ' + str(npcPath2))
+    
     npcList = [
+        
         {
             'actor': {
                 'name': 'npc', 
@@ -152,11 +180,11 @@ def startNcpHandler():
                         'atkCost': []
                     }
                 ],
-                'xPos': 0,
-                'yPos': 0,
+                'x': 1,
+                'y': 1,
                 'color': RED
             },
-            'path': [],
+            'path': npcPath,
         },
         {
             'actor': {
@@ -173,15 +201,15 @@ def startNcpHandler():
                         'atkCost': []
                     }
                 ],
-                'xPos': 0,
-                'yPos': 0,
+                'x': 1,
+                'y': 2,
                 'color': RED
             },
-            'path': [],
+            'path': npcPath2,
         }
     ]
     npcHandler = NpcHandler()
-    npcHandler.createBulkNpcs
+    npcHandler.createBulkNpcs(npcList)
     return npcHandler
            
 def startGame(boardHandler: BoardHandler):

@@ -12,13 +12,14 @@ class NpcActor(Actor):
         attackList = self.actorDict['attackList']
         x = self.actorDict['x']
         y = self.actorDict['y']
+        color = self.actorDict['color']
         
         super().__init__(name, statsList, attackList, x, y)
-    
-        self.path = list[npcDict['path']]
+        self.color = color
+        self.path = list(npcDict['path'])
         
         self.nextMove = self.path[0]
-        self.nextMoveTicks = self.nextMove[1]
+        self.nextMoveTicks = 0
 
         self.pathLoc = 0
         
@@ -31,7 +32,7 @@ class NpcActor(Actor):
     def getUpdate(self, ticks):
         
         # No Update
-        if ticks >= self.nextMoveTicks:
+        if ticks < self.nextMoveTicks:
             return False
         
         # set new loc -> [x, y]
@@ -47,6 +48,7 @@ class NpcActor(Actor):
         # set next move
         self.nextMove = self.path[self.pathLoc]        
         # update ticks to next move
+        # print(self.nextMove[1])
         self.nextMoveTicks = ticks + self.nextMove[1]
         
         return newLoc

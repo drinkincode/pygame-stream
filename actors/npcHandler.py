@@ -5,20 +5,20 @@ class NpcHandler():
     def __init__(self):
        self.npcList = []
        
-    def createNpc(self, npcDict: dict):
-        # actor: Actor, updatesList: list, path: list, timePerMove
-        
-        actor = npcDict['actor']
-        pathList = npcDict['path']
-        
-        newNpc = NpcActor(actor, pathList)
-        self.npcList.append(newNpc)
-        return True
-    
     def createBulkNpcs(self, npcsList: list):
         for npcDict in npcsList:
             self.createNpc(npcDict)
             
+    def createNpc(self, npcDict: dict):
+        # actor: Actor, updatesList: list, path: list, timePerMove
+        
+        # actor = npcDict['actor']
+        # pathList = npcDict['path']
+        
+        newNpc = NpcActor(npcDict)
+        self.npcList.append(newNpc)
+        return True
+    
     def getNpcUpdates(self, ticks, updatesList: list):
         for i in range(len(self.npcList)):
             hasUpdate = self.npcList[i].getUpdate(ticks)
