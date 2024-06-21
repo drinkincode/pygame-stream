@@ -5,9 +5,9 @@ from board.boardHandler import BoardHandler
 from actors.npcHandler import NpcHandler
  
 FPS = 30
-WINDOWWIDTH = 2000
-WINDOWHEIGHT = 1200
-BOXSIZE = 100
+WINDOWWIDTH = 1000
+WINDOWHEIGHT = 600
+BOXSIZE = 50
 BOARDWIDTH = 16
 BOARDHEIGHT = 10
 
@@ -253,7 +253,7 @@ def startGame(boardHandler: BoardHandler):
     
     player = updatesList[0][0]
     return player, npcHandler
-    
+
 
 if __name__ == '__main__':
     main()
