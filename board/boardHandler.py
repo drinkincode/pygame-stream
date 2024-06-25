@@ -11,7 +11,6 @@ class BoardHandler():
         
     def createBoard(self, boardWidth, boardHeight):
         board = [ [0] * boardHeight for _ in range(boardWidth) ]
-        print(board)
         return board
     
     # updatesList: [actor, x, y]

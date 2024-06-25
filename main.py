@@ -114,9 +114,7 @@ def startNcpHandler():
         moveX += 1
         move = [[moveX, moveY], moveTime]
         npcPath2.append(move)
-        
-    print('npc1 path: ' + str(npcPath))
-    print('npc2 path: ' + str(npcPath2))
+
     
     npcList = [
         

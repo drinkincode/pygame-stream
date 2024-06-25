@@ -12,8 +12,6 @@ class NpcHandler():
     def createNpc(self, npcDict: dict):
         # actor: Actor, updatesList: list, path: list, timePerMove
         
-        # actor = npcDict['actor']
-        # pathList = npcDict['path']
         
         newNpc = NpcActor(npcDict)
         self.npcList.append(newNpc)
@@ -28,8 +26,3 @@ class NpcHandler():
                 updatesList.append([self.npcList[i], x, y])
                 
         return updatesList
-    
-    # def setPath(self, direction, distance):
-    #     # [['right', 5, 1000], ['up', 5, 1000]]
-    #     self.paths.append([direction, distance])
-    #     return self.paths

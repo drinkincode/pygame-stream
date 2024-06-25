@@ -10,7 +10,7 @@ class EventHandler():
         self.eventQueue = []
         
     def event(self, eventQueue: list, updatesList: list):
-        for event in eventQueue: # event handling loop
+        for event in eventQueue: # event   handling loop
             currXYList = self.boardHandler.actorPosDict[self.player.name]
             newX = currXYList[0]
             newY = currXYList[1]
